@@ -10,6 +10,8 @@ To achieve this, we should have some knowledge of the following:
 * How to overload operators
 * How to write simple tests
 
+> 💡 Note: In this chapter *vector* refers to our 3-dimensional struct (```Vec3```). If you want to study re-sizable arrays (```Vec```), refer to e.g. [Rust by Example](https://doc.rust-lang.org/stable/rust-by-example/std/vec.html) instead.
+
 ## Creating the Vec3 struct
 
 Our 3-dimensional vector consists of 3 double-precision floating point values (x, y and z):
