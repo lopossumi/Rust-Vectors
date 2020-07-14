@@ -1,5 +1,7 @@
 # Learning Rust Part 3: Vectors
 
+> 📚 Series: [Part 1](https://github.com/lopossumi/Rust-Hello) - [Part 2](https://github.com/lopossumi/Rust-Output-Image) - [Part 3](https://github.com/lopossumi/Rust-Vectors)
+
 In this session our goal is to create some 3-dimensional vectors and add operations:
 * Sum two vectors together using the ```+``` operator
 * Substract two vectors using the ```-``` operator
@@ -8,7 +10,7 @@ To achieve this, we should have some knowledge of the following:
 * How to define ~~classes~~ *structs* and instantiate them
 * How to separate the project into multiple files
 * How to overload operators
-* How to write simple tests
+* How to write unit tests.
 
 > 💡 Note: In this chapter *vector* refers to our 3-dimensional struct (```Vec3```). If you want to study re-sizable arrays (```Vec```), refer to e.g. [Rust by Example](https://doc.rust-lang.org/stable/rust-by-example/std/vec.html) instead.
 
