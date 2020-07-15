@@ -241,9 +241,15 @@ Now the print statements in the main program can written in a cleaner way:
 
 ### Borrowing vs copying
 
-Our ```Vec3``` structs are tiny, which means that the difference in performance between copying and borrowing is negligible (please do correct me if I'm wrong!). By implementing ```Copy``` for our struct, we can get rid of the superfluous ampersands and finally use the vectors as intended.
+Our ```Vec3``` structs are tiny, which means that the difference in performance between copying and borrowing should be negligible. By implementing ```Copy``` for our struct, we can get rid of the superfluous ampersands and finally use the vectors as intended.
 
-Rust makes this really easy: just add a ```#[derive]``` macro and the vectors are copied around instead of passed by reference. Remember to remove the extra ampersands:
+> 🔎 CPU Ray tracing is really heavy, and there are a bunch of things we could try later on to improve performance:
+> * Borrowing instead of copying
+> * Using single-precision floats (```f32```) instead of doubles (```f64```)
+> * Multithreading
+> * 🌟 Utilizing the GPU (although it's hardly CPU ray tracing after this!)
+
+Rust makes copying really easy: just add a ```#[derive]``` macro and the vectors are copied around instead of passed by reference. Remember to remove the extra ampersands:
 
 ```rust
 #[derive(Clone, Copy)]
@@ -338,3 +344,52 @@ See what we did there? You can invoke macros *within macros*. This quick and dir
 ## The rest of the owl
 
 The rest of Chapter 3 is just writing all the other operations for ```Vec3``` (negation, multiplication, dot product and so on).
+
+When converting a vector to an RGB value, we should return an array of three ```u8``` values to be compatible with the image library:
+```rust
+    pub fn to_rgb(&self) -> [u8; 3] {
+        fn f(num: f64) -> u8 {
+            if num < 0.0 { 
+                0
+            }
+            else if num >= 1.0 {
+                255
+            }
+            else {
+                (num * 255.99) as u8
+            }
+        }
+        [f(self.x), f(self.y), f(self.z)]
+    }    
+}
+```
+Now we can re-write the main program from the previous session using the ```Vec3``` ~~class~~ struct and methods.
+```rust
+use image::{RgbImage, ImageBuffer, Rgb};
+
+mod vector;
+use vector::Vec3;
+
+fn main() {
+
+    const IMAGE_WIDTH: u32 = 256;
+    const IMAGE_HEIGHT: u32 = 256;
+
+    let mut buffer: RgbImage = ImageBuffer::new(IMAGE_WIDTH, IMAGE_HEIGHT);
+    
+    for (x, y, pixel) in buffer.enumerate_pixels_mut(){
+        let vector = Vec3::new(
+            x as f64 / (IMAGE_WIDTH-1) as f64,
+            y as f64 / (IMAGE_HEIGHT-1) as f64,
+            0.25);
+        let color = vector.to_rgb();
+        *pixel = Rgb(color);
+    }
+
+    match buffer.save("image.png") {
+        Err(e) => eprintln!("Error writing file: {}", e),
+        Ok(()) => println!("Done."),
+    };
+}
+```
+Next time we should create some rays. From now on there will be a lot less new Rust concepts, as we have already covered the basics. I won't go too deep into the actual ray tracing, as Peter Shirley already explains it way better than I ever could.
