@@ -37,10 +37,19 @@ impl Vec3 {
         self.length_squared().sqrt()
     }
 
-    pub fn to_rgb(&self) -> (u8, u8, u8) {
-        (self.x.min(255.0).max(0.0) as u8, 
-        self.y.min(255.0).max(0.0) as u8, 
-        self.z.min(255.0).max(0.0) as u8)
+    pub fn to_rgb(&self) -> [u8; 3] {
+        fn f(num: f64) -> u8 {
+            if num < 0.0 { 
+                0
+            }
+            else if num >= 1.0 {
+                255
+            }
+            else {
+                (num * 255.99) as u8
+            }
+        }
+        [f(self.x), f(self.y), f(self.z)]
     }    
 }
 
@@ -232,9 +241,9 @@ mod tests {
 
     #[test]
     fn to_rgb(){
-        let vector = Vec3::new(-1.0, 2.0, 300.0);
+        let vector = Vec3::new(-1.0, 0.5, 1.4);
         let result = vector.to_rgb();
-        let expected = (0u8, 2u8, 255u8);
+        let expected = [0u8, 127u8, 255u8];
         assert_eq!(expected, result);
     }
 }
