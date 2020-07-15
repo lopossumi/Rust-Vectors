@@ -102,6 +102,10 @@ To add vectors together, we must simply create a new vector and add x-axis value
 
 ```rust
 // vector.rs
+impl Vec3 {
+    
+    ...
+    
     pub fn add(&self, other: Vec3) -> Vec3 {
         Vec3 { 
             x: self.x + other.x, 
@@ -109,6 +113,7 @@ To add vectors together, we must simply create a new vector and add x-axis value
             z: self.z + other.z
         }
     }
+}
 ```
 To test this in the main program, let's create two vectors and add them together:
 ```rust
@@ -148,7 +153,7 @@ fn main() {
     println!("Vector substraction result is {}", vector1.sub(vector2));
 }
 ```
-Uh oh. Now we have some squiggly lines in the editor. Trying to compile, we get the following error:
+Uh oh. Now we have some squiggly lines in the editor. Trying to compile we get the following error:
 ```
 error[E0382]: use of moved value: `vector2`
   --> src\main.rs:11:63
@@ -163,7 +168,7 @@ error[E0382]: use of moved value: `vector2`
 
 error: aborting due to previous error
 ```
-It seems that ```vector1``` takes ```vector2``` without returning it. Instead, it should only *borrow* it for a while. That can be easily solved with a few strategically placed ampersands (```&```):
+It seems that ```vector1``` takes ```vector2``` without returning it. Instead, it should only [*borrow*](https://doc.rust-lang.org/1.8.0/book/references-and-borrowing.html) it for a while. That can be easily solved with a few strategically placed ampersands (```&```):
 ```rust
 // vector.rs
     pub fn add(&self, other: &Vec3) -> Vec3 {
@@ -248,6 +253,8 @@ Our ```Vec3``` structs are tiny, which means that the difference in performance 
 > * Using single-precision floats (```f32```) instead of doubles (```f64```)
 > * Multithreading
 > * 🌟 Utilizing the GPU (although it's hardly CPU ray tracing after this!)
+>
+> The effect of changes like the first two can sometimes be counterintuitive, as modern CPUs are complex creatures and compilers are usually way better at optimizing than humans!
 
 Rust makes copying really easy: just add a ```#[derive]``` macro and the vectors are copied around instead of passed by reference. Remember to remove the extra ampersands:
 
@@ -310,7 +317,7 @@ mod tests {
 }
 ```
 
-With the VS Code plugin, you can run a single test by clicking the *Run test* link, which appears under ```#[test]```. There is also a handy extension called *Rust Test Explorer* ([swellaby.vscode-rust-test-adapter](https://marketplace.visualstudio.com/items?itemName=swellaby.vscode-rust-test-adapter)), which will show all tests in the side bar.
+With the VS Code Rust extension, you can run a single test by clicking the *Run test* link, which appears under ```#[test]```. There is also a handy extension called *Rust Test Explorer* ([swellaby.vscode-rust-test-adapter](https://marketplace.visualstudio.com/items?itemName=swellaby.vscode-rust-test-adapter)), which will show all tests in the side bar.
 
 > 💡 Note: You can write unit tests for private functions here, too! Some say that it is a bad practice, some don't. If you don't want to test your privates, simply don't do it.
 
@@ -343,7 +350,7 @@ See what we did there? You can invoke macros *within macros*. This quick and dir
 
 ## The rest of the owl
 
-The rest of Chapter 3 is just writing all the other operations for ```Vec3``` (negation, multiplication, dot product and so on).
+The rest of Chapter 3 is just writing all the other operations for ```Vec3``` (negation, multiplication, dot product and so on). Remember to write those tests!
 
 When converting a vector to an RGB value, we should return an array of three ```u8``` values to be compatible with the image library:
 ```rust
